@@ -3,7 +3,7 @@ import axios from 'axios'
 export const getBooks = (page = 1) => {
     return {
         type: 'GET_BOOK',
-        payload: axios.get('http://192.168.6.196:3001/books?page=' + page, {
+        payload: axios.get('https://library-app-backend.herokuapp.com/books?page=' + page, {
             headers: {"authorization": "khusni"}
         }) 
     }

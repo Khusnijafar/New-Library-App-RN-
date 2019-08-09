@@ -8,9 +8,7 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-       <React.Fragment>
        <Root><AppNavigator/></Root>
-       </React.Fragment>
       </Provider>
     )
   }

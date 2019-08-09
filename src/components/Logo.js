@@ -7,7 +7,7 @@ export default class Logo extends Component {
             <View style={styles.container}>
             <Image  style={{width:80, height: 90}}
             source={require('../images/spongebob.png')}/>
-            <Text style={styles.logoText}>Welcome to Library app.</Text>
+            <Text style={styles.logoText}>Library app.</Text>
             </View>
         )
     }
@@ -21,7 +21,7 @@ alignItems: 'center'
 },
 logoText : {
 marginVertical: 15,
-fontSize:18,
+fontSize:20,
 color:'rgba(255, 255, 255, 0.7)'
 }
 });

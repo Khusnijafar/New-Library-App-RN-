@@ -1,12 +1,8 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground} from "react-native";
-import { Toast } from 'native-base';
+import { Toast, Button } from 'native-base';
 import axios from 'axios';
-
-//redux
-// import { connect } from "react-redux";
-// import { loginUser } from "../public/redux/action/auth";
-// import { getUser } from "../public/redux/action/users";
+import ImagePicker from 'react-native-image-picker';
 
 class AddBook extends Component {
     constructor(props) {
@@ -17,7 +13,8 @@ class AddBook extends Component {
             writer: "",
             description: "",
             location: "",
-            id_category: ""
+            id_category: "",
+            photo: null
         }
     }
     onChangeTextTitle = title => this.setState({ title })
@@ -27,21 +24,38 @@ class AddBook extends Component {
     onChangeTextLocation = location => this.setState({ location })
     onChangeTextIdCategory = id_category => this.setState({ id_category })
 
+    handleChoosePhoto = () => {
+        const options = {
+            noData: true
+        }
+        ImagePicker.launchImageLibrary(options, response => {
+            if(response.uri) {
+                this.setState({ photo: response })
+            }
+        })
+    }
 
     handleSubmit = () => {
-        alert('halo')
+        // alert('halo')
+        const dataFile = new FormData()
+        dataFile.append(this.state.photo)
+        dataFile.append('image', 
+            {
+                uri: this.state.photo.uri,
+                type: 'image/jpeg',
+                name: 'gambar'
+            }
+        )
        
-        let addBooks = {
-        title: this.state.title,
-        image: this.state.image,
-        writer: this.state.writer,
-        description: this.state.description,
-        location: this.state.location,
-        id_category: this.state.id_category,
-        }
+        dataFile.append('title', this.state.title)
+        dataFile.append('writer', this.state.writer)
+        dataFile.append('location', this.state.location)
+        dataFile.append('description', this.state.description)
+        dataFile.append('id_category', this.state.id_category)
+        
         let headers = {'authorization':'khusni', 'Content-Type': 'application/json'} 
 
-        axios.post('http://192.168.6.196:3001/books/', addBooks, {headers})
+        axios.post('https://library-app-backend.herokuapp.com/books/', dataFile, {headers})
         .then(res => {
         console.log(res);
         Toast.show({
@@ -55,6 +69,31 @@ class AddBook extends Component {
         })
         .catch(err => console.log(err));
     }
+
+    chooseFile = () => {
+        var options = {
+            title: 'Choose Photo',
+            storageOptions: {
+                skipBackup: true,
+                path: 'images'
+            }
+        }
+        ImagePicker.showImagePicker(options, response => {
+            console.log('Response = ', response)
+            if (response.didCancel) {
+                console.log('Cancel')
+                alert('User cancel upload image')
+            } else if (response.error) {
+                console.log('ImagePicker Error : ', response.error)
+                alert('ImagePicker Error: ' + response.error)
+            } else {
+                let source = response
+                this.setState({
+                    photo: source
+                })
+            }
+        })
+    }   
                     
     render() {
         return(
@@ -62,8 +101,7 @@ class AddBook extends Component {
                 <Text style={{textAlign:'center', fontSize: 18, paddingTop:20, color:'#2F4F4F',}}>Books are uniquely portable magic, we are happy for receiving your books</Text>
                 <TextInput style={styles.inputBox} underlineColorAndroid='rgba(0,0,0,0)' placeholder="Title"
                  placeholderTextColor = "#ffffff" selectionColor="#fff"  onChangeText={this.onChangeTextTitle} />
-                <TextInput style={styles.inputBox} underlineColorAndroid='rgba(0,0,0,0)' placeholder="Image"
-                 placeholderTextColor = "#ffffff" selectionColor="#fff"  onChangeText={this.onChangeTextImage} />
+                 <Button placeholderTextColor = "#ffffff" onPress={this.chooseFile.bind(this)} style={{width: 300, borderRadius: 10}}><Text> Upload Image</Text></Button>
                 <TextInput style={styles.inputBox} underlineColorAndroid='rgba(0,0,0,0)' placeholder="Writer"
                  placeholderTextColor = "#ffffff" selectionColor="#fff"  onChangeText={this.onChangeTextWriter} />
                 <TextInput style={styles.inputBox} underlineColorAndroid='rgba(0,0,0,0)' placeholder="Description"
@@ -83,16 +121,6 @@ class AddBook extends Component {
         )
     }
 }
-
-// const mapStateToProps = state => {
-//     return {
-//       auth: state.auth,
-//       users: state.users
-//     };
-// };
-
-// connect with redux,first param is map and second is component
-// export default connect(mapStateToProps)(Login)
 
 export default AddBook
             

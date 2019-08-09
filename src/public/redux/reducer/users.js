@@ -1,30 +1,39 @@
 const initialState = {
     data: [],
     isLoading: false,
-    isError: false
+    isError: false,
+    isFulfilled: false,
+    token: ''
 }
 
-export default (users = (state = initialState, action) => {
+const users = (state = initialState, action) => {
     switch (action.type) {
-        case "GET_USER_PENDING":
+        case "LOGIN_USER_PENDING":
             return {
-                isLoading: true
+                ...state,
+                isLoading: true,
+                isError: false,
+                isFulfilled: false
             }
-        case "GET_USER_REJECTED":
+        case "LOGIN_USER_REJECTED":
             return {
+                ...state,
                 isLoading: false,
-                isError: true
+                isError: true,
+                isFulfilled: false
             }
-        case "GET_USER_FULFILLED":
-            console.log("action.payload.data.data");
-            console.log("action.payload.data.data[0]");
-            
+        case "LOGIN_USER_FULFILLED":
             return {
+                ...state,
                 isLoading: false,
                 isError: false,
-                data: action.payload.data.data['0']
+                isFulfilled: true,
+                data: [state.data, action.payload],
+                token: action.payload.data.token
             }
         default:
-            return state
+            return state;
     }
-})
+}
+
+export default users

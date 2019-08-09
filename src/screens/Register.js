@@ -73,7 +73,7 @@ export default class Signup extends Component {
             }
             let headers = {'authorization':'khusni', 'Content-Type': 'application/json'} 
 
-            axios.post('http://192.168.6.196:3001/users/register/', dataRegister, {headers})
+            axios.post('https://library-app-backend.herokuapp.com/users/register/', dataRegister, {headers})
             .then(res => {
             console.log(res);
             // this.props.history.push('/login')
@@ -115,7 +115,7 @@ justifyContent :'center'
 inputBox: {
 width:300,
 backgroundColor:'rgba(255, 255,255,0.2)',
-borderRadius: 25,
+borderRadius: 15,
 paddingHorizontal:16,
 fontSize:16,
 color:'#ffffff',

@@ -1,13 +1,8 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity} from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage} from "react-native";
 import { Toast } from 'native-base';
 import Logo from '../components/Logo';
-import axios from 'axios'
-
-//redux
-// import { connect } from "react-redux";
-// import { loginUser } from "../public/redux/action/auth";
-// import { getUser } from "../public/redux/action/users";
+import axios from 'axios';
 
 class Login extends Component {
     constructor(props) {
@@ -58,9 +53,15 @@ class Login extends Component {
         }
         let headers = {'authorization':'khusni', 'Content-Type': 'application/json'} 
 
-        axios.post('http://192.168.6.196:3001/users/login/', dataLogin, {headers})
+        axios.post('https://library-app-backend.herokuapp.com/users/login', dataLogin, {headers})
         .then(res => {
+            AsyncStorage.setItem('token', JSON.stringify(res.data.result.token))
+            AsyncStorage.setItem('card_number', JSON.stringify(res.data.result.card_number))
+            AsyncStorage.setItem('id_user', JSON.stringify(res.data.result.id_user))
+            AsyncStorage.setItem('role_id', JSON.stringify(res.data.result.role_id))
         console.log(res);
+        console.warn(res.data.result.card_number);
+        
         Toast.show({
             text: "Login successful",
             position: "top",
@@ -68,6 +69,13 @@ class Login extends Component {
             duration: 3000
         })
         // this.props.history.push('/login')
+
+        AsyncStorage.getItem('token')
+        AsyncStorage.getItem('card_number'.toString())
+        .then((res) => {
+            token = res,
+            card_number = res
+        })        
         this.props.navigation.navigate('Home')
         })
         .catch(err => console.log(err));
@@ -96,16 +104,6 @@ class Login extends Component {
     }
 }
 
-// const mapStateToProps = state => {
-//     return {
-//       auth: state.auth,
-//       users: state.users
-//     };
-// };
-
-// connect with redux,first param is map and second is component
-// export default connect(mapStateToProps)(Login)
-
 export default Login
             
 const styles = StyleSheet.create({
@@ -118,7 +116,7 @@ justifyContent :'center'
 inputBox: {
 width:300,
 backgroundColor:'rgba(255, 255,255,0.2)',
-borderRadius: 25,
+borderRadius: 15,
 paddingHorizontal:16,
 fontSize:16,
 color:'#ffffff',

@@ -4,6 +4,9 @@ import Login from "../screens/Login";
 import Register from "../screens/Register";
 import Home from "../screens/Home";
 import AddBook from "../screens/Add"
+import Loan from "../screens/Loan"
+import BookDetail from "../screens/BookDetail" 
+ 
 
 const AuthNavigator = createStackNavigator({
     Login, 
@@ -15,7 +18,9 @@ const AuthNavigator = createStackNavigator({
 
 const HomeNavigator = createStackNavigator({
     Home,
-    AddBook
+    AddBook,
+    // Loan,
+    BookDetail
 }, {
     initialRouteName: 'Home',
     headerMode: 'none'
